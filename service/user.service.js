@@ -13,4 +13,23 @@ module.exports = new class Usercontroller {
         })
     }
 
+    saveUser = async(req) => {
+        return new Promise ((resolve,reject) => {
+            let queryString = userQuery.CREATE_USER
+        })
+    }
+
+    updateUser = async(req) => {
+        return new Promise ((resolve,reject) => {
+            let queryString = userQuery.UPDATE_USER
+        })
+    }
+
+    deleteUser = async(req) => {
+        return new Promise ((resolve,reject) => {
+            let queryString = userQuery.DELETE_USER
+        })
+    }
+
+
 }
