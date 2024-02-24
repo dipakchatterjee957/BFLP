@@ -1,7 +1,5 @@
 const mysql = require('mysql2');
 const database = require('./database') ;
-// const { connect } = require('../router/user.router');
-
 
 exports.query = (queryText) => {
     return new Promise((resolve, reject) => {

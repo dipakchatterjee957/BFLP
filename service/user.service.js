@@ -7,7 +7,6 @@ module.exports = new class Usercontroller {
             let queryString = userQuery.GET_USER_LIST;
             connection.query(queryString)
             .then((data) => {
-                // console.log('Service=>',data.response)
                 resolve(data.response)
             })
             .catch((err) => reject(err))
