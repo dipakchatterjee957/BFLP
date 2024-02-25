@@ -1,5 +1,5 @@
-const userService = require('../service/user.service')
-const utils = require('../utils/utils')
+const userService = require('../service/user.service');
+const utils = require('../utils/utils');
 
 module.exports = new class Usercontroller {
 
@@ -10,8 +10,9 @@ module.exports = new class Usercontroller {
     }
 
     saveOrUpdateOrDeleteUser = async(req,res) => {
+        console.log(req.body)
         if(req.body.user_master_id == 0 && req.body.active_flag == 'A') {
-            await userService.saveUser(req)
+            await userService.saveUser(req.body)
             .then((data) => {return utils.sendResponse(res,data,true)})
             .catch((err) => {return utils.sendResponse(res,null,false)})
         }else if(req.body.user_master_id != 0 && req.body.active_flag == 'A'){

@@ -8,3 +8,17 @@ module.exports.sendResponse = (res, data, status, message = null) => {
         response: data
     })
 }
+
+module.exports.getCurrentDateTime = () => {
+        let now = new Date();
+        let date = now.toISOString();
+        let time = now.toTimeString();
+        let dateTime = date.slice(0,date.indexOf('T')) + ' ' +time.split(" ")[0];
+        return dateTime;
+}
+
+module.exports.catchAsync = (fn) => {
+    return (req, res, next) => {
+        fn(req, res, next).catch(next);
+    };  
+}

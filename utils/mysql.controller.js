@@ -9,6 +9,7 @@ exports.query = (queryText) => {
                 if(err) throw err;
     
                 connection.query(queryText, (err,res, field) => {
+                    console.log(queryText)
                     if (err) {
                         console.error(err);
                         throw err;
