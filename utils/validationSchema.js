@@ -11,3 +11,10 @@ module.exports.createUserSchema = yup.object({
         .max(10),
     })
 })
+
+module.exports.loginSchema = yup.object({
+    body: yup.object({
+        login_id: yup.string().required("Please enter login Id"),
+        password: yup.string().required("Please enter password"),
+    })
+})

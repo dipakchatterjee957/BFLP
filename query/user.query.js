@@ -1,6 +1,8 @@
 module.exports = {
 
-    GET_USER_LIST: `select * from user_master`,
+    GET_USER_LIST: `select * from user_master where active_flag in('A','DI') `,
+
+    GET_USER: `select * from user_master where job_status = 'PR' and active_flag = 'A' and login_id = '%login_id%' `,
 
     CREATE_USER: `INSERT INTO user_master
     (branch_master_id,

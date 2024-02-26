@@ -2,21 +2,120 @@ const userQuery = require('../query/user.query');
 const connection = require('../utils/mysql.controller');
 const bcrypt = require("bcryptjs");
 const utils = require('../utils/utils');
-
+const jwt = require('jsonwebtoken');
 
 module.exports = new class Usercontroller {
 
-    getUserList = async(req) =>{
-        return new Promise ((resolve,reject) => {
-            let queryString = userQuery.GET_USER_LIST;
-            connection.query(queryString)
-            .then((data) => {
-                resolve(data.response)
-            })
-            .catch((err) => reject(err))
-        })
-    }
+    // getUserList = async(req) =>{
+    //     return new Promise ((resolve,reject) => {
+    //         let queryString = userQuery.GET_USER_LIST;
+    //         connection.query(queryString)
+    //         .then((data) => {
+    //             resolve(data.response)
+    //         })
+    //         .catch((err) => reject(err))
+    //     })  
+    // }
 
+    getUserList = async (req) => {
+        console.log(req)
+        try {
+            const queryString = userQuery.GET_USER_LIST;
+            const data = await connection.query(queryString);
+            return data.response;
+        } catch (error) {
+            throw error; // or handle the error as needed
+        }
+    };
+    
+
+    // login = async(req) =>{
+    //     return new Promise ((resolve,reject) => {
+    //         let queryString = userQuery.GET_USER
+    //         .replace('%login_id%', req.login_id);
+    //         connection.query(queryString)
+    //         .then((data) => {
+    //             console.log(data.response);
+    //             this.matchPassword(req.password, data.response[0].password)
+    //                 .then((res) => {
+    //                     if(res){
+    //                         const user = {
+    //                             user_master_id: data.response[0].user_master_id,
+    //                             branch_master_id: data.response[0].branch_master_id,
+    //                             user_designation_master_id: data.response[0].user_designation_master_id,
+    //                             user_name: data.response[0].user_name,
+    //                             login_id: data.response[0].login_id,
+    //                             job_status: data.response[0].job_status,
+    //                             active_flag: data.response[0].active_flag,
+    //                           };
+    //                           const payload= {
+    //                             user_master_id: data.response[0].user_master_id,
+    //                             user_name: data.response[0].user_name,
+    //                             login_id: data.response[0].login_id,
+    //                             password: data.response[0].password,
+    //                             salt: data.response[0].salt,
+    //                           };
+    //                             user.access_token = jwt.sign(payload, process.env.SECRET_KEY);
+    //                             resolve(user);
+    //                     }else{
+    //                         reject('Error')
+    //                     }
+    //                 })
+    //                 .catch((err) => reject(err))
+    //         })
+    //         .catch((err) => reject(err))
+    //     })
+    // }
+
+    // matchPassword = async(enterdPassword,savedPassword) => {
+    //     return new Promise ((resolve,reject) => {
+    //         bcrypt.compare(enterdPassword,savedPassword)
+    //         .then((res) => {resolve(res)})
+    //         .catch((err) => reject(false));
+    //     })
+    // }
+
+    login = async (req) => {
+        try {
+            const queryString = userQuery.GET_USER.replace('%login_id%', req.login_id);
+            const data = await connection.query(queryString);
+            const passwordMatch = await this.matchPassword(req.password, data.response[0].password);
+    
+            if (passwordMatch) {
+                const user = {
+                    user_master_id: data.response[0].user_master_id,
+                    branch_master_id: data.response[0].branch_master_id,
+                    user_designation_master_id: data.response[0].user_designation_master_id,
+                    user_name: data.response[0].user_name,
+                    login_id: data.response[0].login_id,
+                    job_status: data.response[0].job_status,
+                    active_flag: data.response[0].active_flag,
+                };
+                const payload = {
+                    user_master_id: data.response[0].user_master_id,
+                    user_name: data.response[0].user_name,
+                    login_id: data.response[0].login_id,
+                    password: data.response[0].password,
+                    salt: data.response[0].salt,
+                };
+                user.access_token = jwt.sign(payload, process.env.SECRET_KEY);
+                return user;
+            } else {
+                throw new Error('Password mismatch');
+            }
+        } catch (error) {
+            throw new Error('Login failed');
+        }
+    };
+    
+    matchPassword = async (enteredPassword, savedPassword) => {
+        try {
+            return await bcrypt.compare(enteredPassword, savedPassword);
+        } catch (error) {
+            return false;
+        }
+    };
+    
     saveUser = async(req) => {
         return new Promise ((resolve,reject) => {
             const hashsalt = bcrypt.genSaltSync(10);
