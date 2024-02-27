@@ -18,7 +18,6 @@ module.exports = new class Usercontroller {
     // }
 
     getUserList = async (req) => {
-        console.log(req)
         try {
             const queryString = userQuery.GET_USER_LIST;
             const data = await connection.query(queryString);
@@ -138,7 +137,7 @@ module.exports = new class Usercontroller {
 
             connection.query(queryString)
             .then((data) => {
-                resolve('Create User')
+                resolve('User Created Successfully')
             })
             .catch((err) => reject(err))
         })

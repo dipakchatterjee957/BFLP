@@ -36,20 +36,21 @@ module.exports = new class Usercontroller {
 
     saveOrUpdateOrDeleteUser = async(req,res) => {
         console.log(req.body)
-        if(req.body.user_master_id == 0 && req.body.active_flag == 'A') {
-            await userService.saveUser(req.body)
-            .then((data) => {return utils.sendResponse(res,data,true)})
-            .catch((err) => {return utils.sendResponse(res,null,false)})
-        }else if(req.body.user_master_id != 0 && req.body.active_flag == 'A'){
-            await userService.updateUser(req)
-            .then((data) => {return utils.sendResponse(res,data,true)})
-            .catch((err) => {return utils.sendResponse(res,null,false)})
-        }else if(req.body.user_master_id != 0 && req.body.active_flag == 'D'){
-            await userService.deleteUser(req)
-            .then((data) => {return utils.sendResponse(res,data,true)})
-            .catch((err) => {return utils.sendResponse(res,null,false)})
-        }else{
-            return utils.sendResponse(res,null,false);
+        try{
+            if(req.body.user_master_id == 0 && req.body.active_flag == 'A') {
+                const data = await userService.saveUser(req.body);
+                return utils.sendResponse(res,data,true);
+            }else if(req.body.user_master_id != 0 && req.body.active_flag == 'A'){
+                const data = await userService.updateUser(req.body);
+                return utils.sendResponse(res,data,true);
+            }else if(req.body.user_master_id != 0 && req.body.active_flag == 'D'){
+                const data = await userService.deleteUser(req.body);
+                return utils.sendResponse(res,data,true);
+            }else{
+                return utils.sendResponse(res,null,false);
+            }
+        } catch (error) {
+            return utils.sendResponse(res, null, false,error.message);
         }
     }
 

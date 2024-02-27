@@ -1,4 +1,5 @@
 module.exports = {
+    CHECK_USER_AUTHENTICATION_QUERY: `select * from user_master where job_status = 'PR' and active_flag = 'A' and user_master_id = %user_master_id% `,
 
     GET_USER_LIST: `select * from user_master where active_flag in('A','DI') `,
 
