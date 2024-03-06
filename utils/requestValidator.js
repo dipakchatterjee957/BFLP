@@ -34,7 +34,7 @@ module.exports = (schema, validateParams) => {
             return next();
         } catch (error) {
             // Handle validation errors
-            console.error(error.errors[0]);
+            console.error('validation errors=>',error.errors[0]);
             return utils.sendResponse(res, null, false, error.errors[0]);
         }
     });
